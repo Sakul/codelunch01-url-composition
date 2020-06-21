@@ -5,94 +5,59 @@ namespace UrlComposition.Shared
 {
     public abstract class PatternBase
     {
-        protected IdComposition IdComposition;
+        protected UrlComposition UrlComposition;
 
-        public PatternBase(string id)
+        public PatternBase(string url)
+            => UrlComposition = Parse(url);
+
+        public UrlComposition Parse(string url)
         {
-            IdComposition = Parse(id);
-        }
-
-        public IdComposition Parse(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(url))
             {
-                return new IdComposition();
+                return new UrlComposition();
             }
 
-            var splitted = id.Split('.', '-', '~');
-            var hasStep = id.Contains(".");
-
-            var stateCode = new char?(splitted.FirstOrDefault().ToLower().FirstOrDefault());
-            stateCode = isStateCodeValid(id, true) ? stateCode : null;
-            var workAndOperation = stateCode.HasValue ? splitted.FirstOrDefault().Substring(1) : splitted.FirstOrDefault();
-
-            var work = workAndOperation.Take(3).Any() ? string.Join(string.Empty, workAndOperation.Take(3)) : null;
-
-            string step = null;
-            if (hasStep)
-            {
-                if (splitted.Length > 1)
-                {
-                    step = splitted[1];
-                }
-                else
-                {
-                    step = splitted[0];
-                }
-            }
-
-            string theId = null;
-            if (id.Contains("-"))
-            {
-                if (hasStep)
-                {
-                    if (splitted.Length > 3)
-                    {
-                        theId = splitted[2];
-                    }
-                    else if (splitted.Length > 2)
-                    {
-                        theId = splitted[2];
-                    }
-                    else if (splitted.Length > 1)
-                    {
-                        theId = splitted[1];
-                    }
-                    else
-                    {
-                        theId = splitted[0];
-                    }
-                }
-                else
-                {
-                    if (splitted.Length > 1)
-                    {
-                        theId = splitted[1];
-                    }
-                    else
-                    {
-                        theId = splitted[0];
-                    }
-                }
-            }
-
-            var result = new IdComposition
+            var splittedInput = url.Split('.', '-', '~');
+            var stateCode = getStateCode();
+            var workAndOperation = stateCode.HasValue ? splittedInput.FirstOrDefault().Substring(1) : splittedInput.FirstOrDefault();
+            const int WorkSegmentCharacterAmount = 3;
+            const int FixedFirstSegmentCharacterAmount = 7;
+            var result = new UrlComposition
             {
                 StateCode = stateCode,
-                Work = work,
-                Operation = workAndOperation.Length > 3 ? workAndOperation.Substring(3) : null,
-                Step = step,
-                Id = theId,
-                Correlation = id.Contains("~") ? splitted.LastOrDefault() : null,
+                Work = workAndOperation.Take(WorkSegmentCharacterAmount).Any() ?
+                    string.Join(string.Empty, workAndOperation.Take(WorkSegmentCharacterAmount)) : null,
+                Operation = workAndOperation.Length > WorkSegmentCharacterAmount ?
+                    workAndOperation.Substring(WorkSegmentCharacterAmount) : null,
+                Step = url.Contains(".") ? splittedInput[1] : null,
+                Id = getId(),
+                Correlation = url.Contains("~") ? splittedInput.LastOrDefault() : null,
+                IsValid = isStateCodeValid(url) && url.Contains("-") && splittedInput.FirstOrDefault()?.Length == FixedFirstSegmentCharacterAmount,
             };
-            result.IsValid = isStateCodeValid(id) && id.Contains("-") && splitted.FirstOrDefault()?.Length == 7;
             return result;
-        }
-        private bool isStateCodeValid(string input, bool ignoreCaseSensitive = false)
-        {
-            var comparison = ignoreCaseSensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
-            return input.StartsWith("n", comparison)
-                || input.StartsWith("m", comparison);
+
+            char? getStateCode()
+            {
+                if (false == isStateCodeValid(url, true))
+                {
+                    return null;
+                }
+                return splittedInput.Any() ? new char?(splittedInput.FirstOrDefault().ToLower().FirstOrDefault()) : null;
+            }
+            string getId()
+            {
+                if (false == url.Contains("-"))
+                {
+                    return null;
+                }
+                return url.Contains(".") ? splittedInput[2] : splittedInput[1];
+            }
+            bool isStateCodeValid(string input, bool ignoreCaseSensitive = false)
+            {
+                var comparison = ignoreCaseSensitive ? StringComparison.CurrentCultureIgnoreCase : StringComparison.CurrentCulture;
+                return input.StartsWith("n", comparison)
+                    || input.StartsWith("m", comparison);
+            }
         }
 
         public abstract bool Match(string id);

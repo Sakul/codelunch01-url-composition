@@ -1,6 +1,6 @@
 ﻿namespace UrlComposition.Shared
 {
-    public class IdComposition
+    public class UrlComposition
     {
         public bool IsValid { get; set; }
         public char? StateCode { get; set; }

@@ -41,11 +41,11 @@ namespace UrlComposition.Shared.Tests
         [Theory]
         [ClassData(typeof(SystemCanDecompositionCorrectlyCases))]
         [ClassData(typeof(SystemCanDecompositionInvalidInputCases))]
-        public void SystemCanDecompositionCorrectly(string input, IdComposition expected)
+        public void SystemCanDecompositionCorrectly(string input, UrlComposition expected)
         {
             new TestPattern(input).ActualComposition.Should().BeEquivalentTo(expected);
         }
-        class SystemCanDecompositionCorrectlyCases : TheoryData<string, IdComposition>
+        class SystemCanDecompositionCorrectlyCases : TheoryData<string, UrlComposition>
         {
             public SystemCanDecompositionCorrectlyCases()
             {
@@ -56,7 +56,7 @@ namespace UrlComposition.Shared.Tests
             }
             void MinimumRequirement()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -68,7 +68,7 @@ namespace UrlComposition.Shared.Tests
             }
             void MinimumRequirement_Without_Correlation()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -81,7 +81,7 @@ namespace UrlComposition.Shared.Tests
             }
             void MinimumRequirement_Without_Step()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -94,7 +94,7 @@ namespace UrlComposition.Shared.Tests
             }
             void FullCases()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -107,7 +107,7 @@ namespace UrlComposition.Shared.Tests
                 Add("ncrtchk.1-0001~9999", expected);
             }
         }
-        class SystemCanDecompositionInvalidInputCases : TheoryData<string, IdComposition>
+        class SystemCanDecompositionInvalidInputCases : TheoryData<string, UrlComposition>
         {
             public SystemCanDecompositionInvalidInputCases()
             {
@@ -139,7 +139,7 @@ namespace UrlComposition.Shared.Tests
             }
             void InvalidStateCode_Not_m_Or_n()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = null,
                     Work = "*cr",
@@ -152,7 +152,7 @@ namespace UrlComposition.Shared.Tests
             }
             void InvalidStateCode_UpperCasse_N()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -165,7 +165,7 @@ namespace UrlComposition.Shared.Tests
             }
             void InvalidStateCode_UpperCasse_M()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'm',
                     Work = "crt",
@@ -178,7 +178,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StateCodeOnly_n()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                 };
@@ -186,7 +186,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StateCodeOnly_m()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'm',
                 };
@@ -194,7 +194,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StateCodeOnly_N()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                 };
@@ -202,7 +202,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StateCodeOnly_M()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'm',
                 };
@@ -210,7 +210,7 @@ namespace UrlComposition.Shared.Tests
             }
             void WorkOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Work = "crt"
                 };
@@ -218,7 +218,7 @@ namespace UrlComposition.Shared.Tests
             }
             void WorkOnly_CaseSensitive()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Work = "cRt"
                 };
@@ -226,7 +226,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StepOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Step = "1",
                 };
@@ -234,7 +234,7 @@ namespace UrlComposition.Shared.Tests
             }
             void CorrelationOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Correlation = "9999",
                 };
@@ -242,7 +242,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StateAndWorkOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -251,7 +251,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StateAndStepOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Step = "1",
@@ -260,7 +260,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StateAndIdOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Id = "0001",
@@ -269,7 +269,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StateAndCorrelationOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Correlation = "9999",
@@ -278,7 +278,7 @@ namespace UrlComposition.Shared.Tests
             }
             void WorkAndStepOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Work = "crt",
                     Step = "1",
@@ -287,7 +287,7 @@ namespace UrlComposition.Shared.Tests
             }
             void WorkAndIdOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Work = "crt",
                     Id = "0001",
@@ -296,7 +296,7 @@ namespace UrlComposition.Shared.Tests
             }
             void WorkAndCorrelationOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Work = "crt",
                     Correlation = "9999",
@@ -305,7 +305,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StepAndIdOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Step = "1",
                     Id = "0001",
@@ -314,7 +314,7 @@ namespace UrlComposition.Shared.Tests
             }
             void StepAndCorrelationOnly()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     Step = "1",
                     Correlation = "9999",
@@ -323,7 +323,7 @@ namespace UrlComposition.Shared.Tests
             }
             void TooLongOperation()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -333,7 +333,7 @@ namespace UrlComposition.Shared.Tests
             }
             void TooLongStep()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -343,7 +343,7 @@ namespace UrlComposition.Shared.Tests
             }
             void TooLongId()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -353,7 +353,7 @@ namespace UrlComposition.Shared.Tests
             }
             void TooLongCorrelation()
             {
-                var expected = new IdComposition
+                var expected = new UrlComposition
                 {
                     StateCode = 'n',
                     Work = "crt",
@@ -363,7 +363,7 @@ namespace UrlComposition.Shared.Tests
             }
             void InvalidInput()
             {
-                var expected = new IdComposition();
+                var expected = new UrlComposition();
                 Add(string.Empty, expected);
                 Add(" ", expected);
                 Add(null, expected);
@@ -372,7 +372,7 @@ namespace UrlComposition.Shared.Tests
 
         class TestPattern : PatternBase
         {
-            public IdComposition ActualComposition => IdComposition;
+            public UrlComposition ActualComposition => UrlComposition;
             public TestPattern(string id) : base(id) { }
             public override bool Match(string id) => throw new NotImplementedException();
         }

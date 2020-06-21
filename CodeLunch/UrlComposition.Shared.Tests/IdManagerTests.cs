@@ -39,6 +39,15 @@ namespace UrlComposition.Shared.Tests
         }
 
         [Theory]
+        [InlineData("ncrtchk.1-2003", "ncrt-2003", true)]
+        [InlineData("ncrtchk.1-2003", "ncrtchk.1-2003", true)]
+        [InlineData("ncrtchk.1-2003", "ncrtchk.2-2003", false)]
+        public void StepCases(string input, string target, bool expected)
+        {
+            sut.IsMatched(input, target).Should().Be(expected);
+        }
+
+        [Theory]
         [ClassData(typeof(SystemCanDecompositionCorrectlyCases))]
         [ClassData(typeof(SystemCanDecompositionInvalidInputCases))]
         public void SystemCanDecompositionCorrectly(string input, UrlComposition expected)

@@ -7,6 +7,13 @@
         }
 
         public override bool Match(string id)
-            => UrlComposition.Id == Parse(id).Id;
+        {
+            var other = Parse(id);
+            var self = UrlComposition;
+            var isIdMatch = self.Id == other.Id;
+            var isWorkMatch = $"{self.StateCode}{self.Work}" == $"{other.StateCode}{other.Work}";
+            var isStepMatch = string.IsNullOrWhiteSpace(self.Step) || self.Step == other.Step;
+            return isIdMatch && isWorkMatch && isStepMatch;
+        }
     }
 }

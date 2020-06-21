@@ -40,6 +40,7 @@ namespace UrlComposition.Shared.Tests
 
         [Theory]
         [ClassData(typeof(SystemCanDecompositionCorrectlyCases))]
+        [ClassData(typeof(SystemMustNotDecompositionInvalidInputCases))]
         public void SystemCanDecompositionCorrectly(string input, IdComposition expected)
         {
             new TestPattern(input).ActualComposition.Should().BeEquivalentTo(expected);
@@ -48,16 +49,96 @@ namespace UrlComposition.Shared.Tests
         {
             public SystemCanDecompositionCorrectlyCases()
             {
-                WorkCodeOnly();
+                MinimumRequirement();
+                MinimumRequirement_Without_Correlation();
+                MinimumRequirement_Without_Step();
+                FullCases();
             }
-            void WorkCodeOnly()
+            void MinimumRequirement()
             {
                 var expected = new IdComposition
                 {
                     StateCode = 'n',
-                    Work = "ncrt"
+                    Work = "ncrt",
+                    Operation = "chk",
+                    Id = "0001",
                 };
-                Add("ncrt", expected);
+                Add("ncrtchk-0001", expected);
+            }
+            void MinimumRequirement_Without_Correlation()
+            {
+                var expected = new IdComposition
+                {
+                    StateCode = 'n',
+                    Work = "ncrt",
+                    Operation = "chk",
+                    Step = "1",
+                    Id = "0001",
+                };
+                Add("ncrtchk.1-0001", expected);
+            }
+            void MinimumRequirement_Without_Step()
+            {
+                var expected = new IdComposition
+                {
+                    StateCode = 'n',
+                    Work = "ncrt",
+                    Operation = "chk",
+                    Id = "0001",
+                    Correlation = "9999",
+                };
+                Add("ncrtchk-0001~9999", expected);
+            }
+            void FullCases()
+            {
+                var expected = new IdComposition
+                {
+                    StateCode = 'n',
+                    Work = "ncrt",
+                    Operation = "chk",
+                    Step = "1",
+                    Id = "0001",
+                    Correlation = "9999",
+                };
+                Add("ncrtchk.1-0001~9999", expected);
+            }
+        }
+        class SystemMustNotDecompositionInvalidInputCases : TheoryData<string, IdComposition>
+        {
+            public SystemMustNotDecompositionInvalidInputCases()
+            {
+                NoId();
+                StateCodeInvalid();
+                TooShort();
+                InvalidInput();
+            }
+            void StateCodeInvalid()
+            {
+                Add("crtchk.1-0001~9999", null);
+                Add("Ncrtchk.1-0001~9999", null);
+                Add("Mcrtchk.1-0001~9999", null);
+            }
+            void NoId()
+            {
+                Add("ncrt", null);
+                Add("ncrtchk.1", null);
+                Add("ncrtchk~9999", null);
+                Add("ncrtchk.1~9999", null);
+            }
+            void TooShort()
+            {
+                Add("n-0001", null);
+                Add("nc-0001", null);
+                Add("ncr-0001", null);
+                Add("ncrt-0001", null);
+                Add("ncrtc-0001", null);
+                Add("ncrtch-0001", null);
+            }
+            void InvalidInput()
+            {
+                Add(string.Empty, null);
+                Add(" ", null);
+                Add(null, null);
             }
         }
 

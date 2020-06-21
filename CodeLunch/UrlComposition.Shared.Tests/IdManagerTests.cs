@@ -1,4 +1,5 @@
 using FluentAssertions;
+using System;
 using Xunit;
 
 namespace UrlComposition.Shared.Tests
@@ -28,6 +29,43 @@ namespace UrlComposition.Shared.Tests
         public void CorrelationCases(string input, string target, bool expected)
         {
             sut.IsMatched(input, target).Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("ncrtchk-2003", "ncrt-2003", true)]
+        public void IdCases(string input, string target, bool expected)
+        {
+            sut.IsMatched(input, target).Should().Be(expected);
+        }
+
+        [Theory]
+        [ClassData(typeof(SystemCanDecompositionCorrectlyCases))]
+        public void SystemCanDecompositionCorrectly(string input, IdComposition expected)
+        {
+            new TestPattern(input).ActualComposition.Should().BeEquivalentTo(expected);
+        }
+        class SystemCanDecompositionCorrectlyCases : TheoryData<string, IdComposition>
+        {
+            public SystemCanDecompositionCorrectlyCases()
+            {
+                WorkCodeOnly();
+            }
+            void WorkCodeOnly()
+            {
+                var expected = new IdComposition
+                {
+                    StateCode = 'n',
+                    Work = "ncrt"
+                };
+                Add("ncrt", expected);
+            }
+        }
+
+        class TestPattern : PatternBase
+        {
+            public IdComposition ActualComposition => IdComposition;
+            public TestPattern(string id) : base(id) { }
+            public override bool Match(string id) => throw new NotImplementedException();
         }
     }
 }

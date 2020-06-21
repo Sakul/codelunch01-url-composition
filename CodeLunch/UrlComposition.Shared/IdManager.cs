@@ -1,4 +1,6 @@
-﻿namespace UrlComposition.Shared
+﻿using System;
+
+namespace UrlComposition.Shared
 {
     public class IdManager : IIdManager
     {

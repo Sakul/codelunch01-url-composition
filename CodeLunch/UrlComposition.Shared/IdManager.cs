@@ -4,7 +4,14 @@
     {
         public bool IsMatched(string id, string target)
         {
-            return id == target;
+            if (target.StartsWith("~"))
+            {
+                return id.EndsWith(target);
+            }
+            else
+            {
+                return id == target;
+            }
         }
     }
 }

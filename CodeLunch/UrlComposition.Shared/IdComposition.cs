@@ -2,6 +2,7 @@
 {
     public class IdComposition
     {
+        public bool IsValid { get; set; }
         public char? StateCode { get; set; }
         public string Work { get; set; }
         public string Operation { get; set; }

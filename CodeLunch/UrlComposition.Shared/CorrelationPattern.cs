@@ -9,6 +9,6 @@ namespace UrlComposition.Shared
         }
 
         public override bool Match(string id)
-            => throw new NotImplementedException();
+            => UrlComposition.Correlation == Parse(id).Correlation;
     }
 }

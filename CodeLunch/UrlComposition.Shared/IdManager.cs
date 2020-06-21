@@ -1,18 +1,19 @@
-﻿using System;
-
-namespace UrlComposition.Shared
+﻿namespace UrlComposition.Shared
 {
     public class IdManager : IIdManager
     {
         public bool IsMatched(string id, string target)
+            => GetPattern(target).Match(id);
+
+        private PatternBase GetPattern(string target)
         {
-            if (target.StartsWith("~"))
+            if (target.Contains("~"))
             {
-                return id.EndsWith(target);
+                return new CorrelationPattern(target);
             }
             else
             {
-                return id == target;
+                return new IdPattern(target);
             }
         }
     }

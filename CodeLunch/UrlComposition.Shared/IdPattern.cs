@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace UrlComposition.Shared
+﻿namespace UrlComposition.Shared
 {
     public class IdPattern : PatternBase
     {
@@ -9,6 +7,6 @@ namespace UrlComposition.Shared
         }
 
         public override bool Match(string id)
-            => throw new NotImplementedException();
+            => UrlComposition.Id == Parse(id).Id;
     }
 }
